@@ -20,7 +20,7 @@ int bulletNum;           //Bullet Order Number
 int countAlien;
 int aliveAlien;
 int laserNum;
-
+boolean alienHit;
 
 void setup() {
 
@@ -65,10 +65,10 @@ void draw() {
 
     /*---------Call functions---------------*/
     alienShoot(50);
+    checkRubyDrop(200);
+    checkRubyCatch();
     checkWinLose();
     
-    
-
     checkAlienDead();/*finish this function*/
     checkShipHit();  /*finish this function*/
 
@@ -125,10 +125,8 @@ void alienMaker(int alienNums,int numInRow) {
   for(int i = 0;i < alienNums;i++){
     int col = int(i % numInRow);
     int row = int(i / numInRow);
-    
     aList[i]= new Alien(50+(40*col), 50+(50*row));
-  }
-  
+  }  
 }
 
 void drawLife() {
@@ -138,7 +136,6 @@ void drawLife() {
   for(int life = 0 ;life < ship.life ;life++){
     ellipse(78+(25*life),459,15,15);
   }
-  
 }
 
 void drawBullet() {
@@ -174,7 +171,7 @@ void drawAlien() {
       alien.move();    //Move Alien
       alien.display(); //Draw Alien
       /*---------Call Check Line Hit---------*/
-
+      checkAlienBut();
       /*--------------------------------------*/
     }
   }
@@ -182,7 +179,13 @@ void drawAlien() {
 
 /*--------Check Line Hit---------*/
 void checkAlienBut(){
-  
+  alienHit = false;
+  for(int i = 0; i < countAlien ; i++){
+    Alien alien = aList[i];
+    if(int(aList[i].aY-aList[i].aSize/2) == 420 ){
+      alienHit = true; 
+    }
+  }
 }
 
 /*---------Ship Shoot-------------*/
@@ -198,9 +201,11 @@ void shootBullet(int frame) {
     } 
     /*---------Ship Upgrade Shoot-------------*/
     else {
-      bList[bulletNum]= new Bullet(ship.posX, ship.posY, -3, 0); 
-      if (bulletNum<bList.length-2) {
-        bulletNum+=1;
+      bList[bulletNum  ]= new Bullet(ship.posX, ship.posY, -3, 0);
+      bList[bulletNum+1]= new Bullet(ship.posX, ship.posY, -3, -1);
+      bList[bulletNum+2]= new Bullet(ship.posX, ship.posY, -3, 1); 
+      if (bulletNum<bList.length-5) {
+        bulletNum+=3;
       } else {
         bulletNum = 0;
       }
@@ -220,8 +225,7 @@ void checkAlienDead() {
       && bList[i].bX >= int(aList[j].aX - (aList[j].aSize*3/2))
       && bList[i].bX <= int(aList[j].aX + (aList[j].aSize*3/2))
       && bList[i].bY >= aList[j].aY - aList[j].aSize
-      && bList[i].bY <= aList[j].aY
-                                              ) {
+      && bList[i].bY <= aList[j].aY){
         /*-------do something------*/
         removeBullet(bList[i]);
         removeAlien(aList[j]);
@@ -232,8 +236,7 @@ void checkAlienDead() {
       && bList[i].bX >= int(aList[j].aX - aList[j].aSize)
       && bList[i].bX <= int(aList[j].aX + aList[j].aSize)
       && bList[i].bY >= aList[j].aY
-      && bList[i].bY <= aList[j].aY + aList[j].aSize
-                                              ) {
+      && bList[i].bY <= aList[j].aY + aList[j].aSize){
         /*-------do something------*/
         removeBullet(bList[i]);
         removeAlien(aList[j]);
@@ -241,8 +244,7 @@ void checkAlienDead() {
         aliveAlien--;
       }
     }
-  }
-  
+  } 
 }
 
 /*---------Alien Drop Laser-----------------*/
@@ -250,18 +252,18 @@ void alienShoot(int frame){
   int i = int(frameCount / frame);
   if (frameCount % frame == 0) {
     int j = int(random(countAlien));
-      if(!aList[j].die){
-        lList[laserNum]= new Laser(aList[j].aX, aList[j].aY);
-        if(laserNum < lList.length-2){
-          laserNum++;
-        }else{
-          laserNum = 0;
-        }
-      }else if(aList[j].die){
-        alienShoot(50);
+    if(!aList[j].die){
+      
+      lList[laserNum]= new Laser(aList[j].aX, aList[j].aY);
+      if(laserNum < lList.length-2){
+        laserNum++;
+      }else{
+        laserNum = 0;
       }
+    }else if(aList[j].die){
+        alienShoot(50);
+    }
   }
-  
 }
 
 /*---------Check Laser Hit Ship-------------*/
@@ -273,8 +275,7 @@ void checkShipHit() {
       && lList[i].lX >= int(ship.posX - ship.shipSize/2)
       && lList[i].lX <= int(ship.posX + ship.shipSize/2)
       && lList[i].lY >= int(ship.posY - ship.shipSize)
-      && lList[i].lY <= int(ship.posY + ship.shipSize/2-6)
-                                           ) {
+      && lList[i].lY <= int(ship.posY + ship.shipSize/2-6) ){
       /*-------do something------*/
       ship.life--;
       drawLife();
@@ -284,15 +285,13 @@ void checkShipHit() {
       && lList[i].lX >= int( ship.posX - ship.shipSize)
       && lList[i].lX <= int( ship.posX + ship.shipSize)
       && lList[i].lY >= int( ship.posY + ship.shipSize/2-6)
-      && lList[i].lY <= int( ship.posY + ship.shipSize)
-                                           ) {
+      && lList[i].lY <= int( ship.posY + ship.shipSize)    ){
       /*-------do something------*/
       ship.life--;
       drawLife();
       removeLaser(lList[i]);
     }
-  }
-  
+  }  
 }
 
 /*---------Check Win Lose------------------*/
@@ -301,14 +300,12 @@ void checkWinLose(){
   switch(status){
    
    case GAME_PLAYING:
-     if(ship.life == 0){
+     if(ship.life == 0 || alienHit){
        status = GAME_LOSE;
      }else if(aliveAlien == 0){
        status = GAME_WIN;
      }
-    
-  }
-  
+  } 
 }
 
 void winAnimate() {
@@ -341,10 +338,34 @@ void loseAnimate() {
 }
 
 /*---------Check Ruby Hit Ship-------------*/
-
+void checkRubyCatch(){
+ if(  ruby.pX >= int(ship.posX - ship.shipSize/2)
+    &&ruby.pX <= int(ship.posX + ship.shipSize/2)
+    &&ruby.pY >= int(ship.posY - ship.shipSize)
+    &&ruby.pY <= int(ship.posY + ship.shipSize/2-6) ){
+    ship.upGrade = true; 
+    ruby.pX = 1000;
+    ruby.pY = 1000;
+ }else if(ruby.pX >= int( ship.posX - ship.shipSize)
+        &&ruby.pX <= int( ship.posX + ship.shipSize)
+        &&ruby.pY >= int( ship.posY + ship.shipSize/2-6)
+        &&ruby.pY <= int( ship.posY + ship.shipSize) ){
+    ship.upGrade = true;
+    ruby.pX = 1000;
+    ruby.pY = 1000;
+ }
+}
 
 /*---------Check Level Up------------------*/
-
+void checkRubyDrop(int score){
+  if(score == point){
+   ruby.show = true;
+  }
+  if(ruby.show){
+    ruby.move();
+    ruby.display();    
+  }
+}
 
 /*---------Print Text Function-------------*/
 void printText(){
@@ -385,7 +406,6 @@ void printText(){
       text("You are dead!!",width/2,280);
       break;
   }
-
 }
 
 void removeBullet(Bullet obj) {
