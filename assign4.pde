@@ -204,7 +204,7 @@ void shootBullet(int frame) {
       bList[bulletNum  ]= new Bullet(ship.posX, ship.posY, -3, 0);
       bList[bulletNum+1]= new Bullet(ship.posX, ship.posY, -3, -1);
       bList[bulletNum+2]= new Bullet(ship.posX, ship.posY, -3, 1); 
-      if (bulletNum<bList.length-5) {
+      if (bulletNum<bList.length-6) {
         bulletNum+=3;
       } else {
         bulletNum = 0;
