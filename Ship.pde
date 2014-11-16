@@ -17,22 +17,22 @@ class Ship {
 
     if (!upGrade) {
       fill(230, 74, 96);
-      triangle(    posX            ,     posY-shipSize     , int(posX-shipSize/2), int(posY-shipSize/2), int(posX+shipSize/2), int(posY-shipSize/2));
-      triangle(int(posX-shipSize/2), int(posY+shipSize/2-2),     posX-shipSize   ,     posY+shipSize-2 , int(posX-shipSize/2),     posY+shipSize-2 );
-      triangle(int(posX+shipSize/2), int(posY+shipSize/2-2),     posX+shipSize   ,     posY+shipSize-2 , int(posX+shipSize/2),     posY+shipSize-2 );
+      triangle(int(posX           ), int(posY-shipSize    ), int(posX-shipSize/2), int(posY-shipSize/2), int(posX+shipSize/2), int(posY-shipSize/2));
+      triangle(int(posX-shipSize/2), int(posY+shipSize/2-2), int(posX-shipSize  ), int(posY+shipSize-2), int(posX-shipSize/2), int(posY+shipSize-2));
+      triangle(int(posX+shipSize/2), int(posY+shipSize/2-2), int(posX+shipSize  ), int(posY+shipSize-2), int(posX+shipSize/2), int(posY+shipSize-2));
       fill(255, 255, 255);
-      rect(posX, int(posY+shipSize/4), shipSize, float(shipSize/4*6.6));
+      rect(int(posX), int(posY+shipSize/4), int(shipSize), int(shipSize/4*6.6));
       fill(76, 120, 168);
-      ellipse(posX, posY, int(shipSize/2), int(shipSize/2));
+      ellipse(int(posX), int(posY), int(shipSize/2), int(shipSize/2));
     }else{
       fill(0, 161, 255);
-      triangle(    posX            ,     posY-shipSize      , int(posX-shipSize/2), int(posY-shipSize/2), int(posX+shipSize/2), int(posY-shipSize/2));
-      triangle(int(posX-shipSize/2), int(posY+shipSize/2-10),     posX-shipSize   ,     posY+shipSize-2 , int(posX-shipSize/2),     posY+shipSize-2 );
-      triangle(int(posX+shipSize/2), int(posY+shipSize/2-10),     posX+shipSize   ,     posY+shipSize-2 , int(posX+shipSize/2),     posY+shipSize-2 );
+      triangle(int(posX           ), int(posY-shipSize     ), int(posX-shipSize/2), int(posY-shipSize/2), int(posX+shipSize/2), int(posY-shipSize/2));
+      triangle(int(posX-shipSize/2), int(posY+shipSize/2-10), int( posX-shipSize ), int(posY+shipSize-2), int(posX-shipSize/2), int(posY+shipSize-2));
+      triangle(int(posX+shipSize/2), int(posY+shipSize/2-10), int(posX+shipSize  ), int(posY+shipSize-2), int(posX+shipSize/2), int(posY+shipSize-2));
       fill(255, 255, 255);
-      rect(posX, int(posY+shipSize/4), shipSize, float(shipSize/4*6.6));
+      rect(int(posX), int(posY+shipSize/4), int(shipSize), int(shipSize/4*6.6));
       fill(76, 120, 168);
-      ellipse(posX, posY, int(shipSize/2), int(shipSize/2));
+      ellipse(int(posX), int(posY), int(shipSize/2), int(shipSize/2));
     }
   }
 
